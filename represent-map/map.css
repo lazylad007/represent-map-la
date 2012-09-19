@@ -38,6 +38,8 @@ html, body, #map_canvas
   top: 0px;
   bottom: 0px;
   z-index: 1;
+  /*width:500px;
+  height:500px;*/
 }
 
 
@@ -216,7 +218,32 @@ html, body, #map_canvas
 {
   float: right;
   padding: 10px;
+  height: 26px;
+  cursor: pointer;
 }
+.list .category .category_toggle.inactive
+{
+  opacity: .3;
+}
+.list .category .category_toggle.inactive:hover
+{
+  opacity: .6;
+}
+
+
+.list .category .category_toggle input
+{
+  display: none;
+}
+.list .category .category_toggle
+{
+  background-image: url("./images/icons/check.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+  width: 30px;
+}
+
+
 .list .list-items
 {
   display: none;
@@ -269,6 +296,7 @@ html, body, #map_canvas
 .marker_title
 {
   font-weight: bold;
+  max-width: 350px;
 }
 .marker_uri
 {
@@ -309,6 +337,7 @@ html, body, #map_canvas
 {
   text-shadow: 0px 1px 0px #000;
 }
+
 .modal .modal-body
 {
   background-color: #fff;
@@ -329,7 +358,7 @@ html, body, #map_canvas
 /* add marker modal */
 #modal_add
 {
-  margin-top: -350px;
+  margin-top: -330px;
 }
 #modal_add .modal-body
 {
@@ -358,7 +387,7 @@ html, body, #map_canvas
 /* get info modal */
 #modal_info
 {
-  margin-top: -350px;
+  margin-top:-330px;
 }
 #modal_info .modal-body
 {

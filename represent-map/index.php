@@ -8,14 +8,14 @@ include "header.php";
   <head>
     <!--
     This site was based on the Represent.LA project by:
-    - Alex Benzer
-    - Tara Tiger Brown
-    - Sean Bonner
+    - Alex Benzer (@abenzer)
+    - Tara Tiger Brown (@tara)
+    - Sean Bonner (@seanbonner)
     
     Create a map for your startup community!
     https://github.com/abenzer/represent-map
     -->
-    <title>represent.la - map of the Los Angeles startup community</title>
+    <title>Startup community - Kerala</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta charset="UTF-8">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:700|Open+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -72,32 +72,68 @@ include "header.php";
       function initialize() {
         // set map styles
         var mapStyles = [
-          {
-            featureType: "administrative.land_parcel",
+         {
+            featureType: "road",
+            elementType: "geometry",
             stylers: [
-              { visibility: "off" }
+              { hue: "#8800ff" },
+              { lightness: 100 }
+            ]
+          },{
+            featureType: "road",
+            stylers: [
+              { visibility: "on" },
+              { hue: "#91ff00" },
+              { saturation: -62 },
+              { gamma: 1.98 },
+              { lightness: 45 }
             ]
           },{
             featureType: "water",
             stylers: [
-              { visibility: "on" },
-              { saturation: 31 },
-              { lightness: 39 }
+              { hue: "#005eff" },
+              { gamma: 0.72 },
+              { lightness: 42 }
             ]
           },{
-            featureType: "road.highway",
+            featureType: "transit.line",
             stylers: [
-              { visibility: "simplified" },
-              { lightness: 18 }
+              { visibility: "off" }
+            ]
+          },{
+            featureType: "administrative.locality",
+            stylers: [
+              { visibility: "on" }
+            ]
+          },{
+            featureType: "administrative.neighborhood",
+            elementType: "geometry",
+            stylers: [
+              { visibility: "simplified" }
+            ]
+          },{
+            featureType: "landscape",
+            stylers: [
+              { visibility: "on" },
+              { gamma: 0.41 },
+              { lightness: 46 }
+            ]
+          },{
+            featureType: "administrative.neighborhood",
+            elementType: "labels.text",
+            stylers: [
+              { visibility: "on" },
+              { saturation: 33 },
+              { lightness: 20 }
             ]
           }
         ];
 
         // set map options
         var myOptions = {
-          zoom: 12,
+          zoom: 8,
           //minZoom: 10,
-          center: new google.maps.LatLng(34.034453,-118.341293),
+          center: new google.maps.LatLng(10.6537, 76.0728),
           mapTypeId: google.maps.MapTypeId.ROADMAP,
           panControl: false,
           streetViewControl: false,
@@ -126,35 +162,55 @@ include "header.php";
             $(".marker_label").css("display", "inline");
           }
         });
-
         // markers array: name, type (icon), lat, long, description, uri, address
         markers = new Array();
         <?php
           $types = Array(
               Array('startup', 'Startups'),
-              Array('accelerator','Accelerators'),
+              Array('accelerator','Accelerators'),  
               Array('incubator', 'Incubators'), 
               Array('coworking', 'Coworking'), 
-              Array('investor', 'Investors'),
+               Array('investor', 'Investors'),
               Array('service', 'Consulting'),
+              Array('event', 'Events'),
               );
           $marker_id = 0;
+		  #$count = 0;
           foreach($types as $type) {
             $places = mysql_query("SELECT * FROM places WHERE approved='1' AND type='$type[0]' ORDER BY title");
             $places_total = mysql_num_rows($places);
             while($place = mysql_fetch_assoc($places)) {
-              $place[title] = htmlspecialchars_decode(addslashes(htmlspecialchars($place[title])));
-              $place[description] = htmlspecialchars_decode(addslashes(htmlspecialchars($place[description])));
-              $place[uri] = addslashes(htmlspecialchars($place[uri]));
-              $place[address] = htmlspecialchars_decode(addslashes(htmlspecialchars($place[address])));
+              $place['title'] = htmlspecialchars_decode(addslashes(htmlspecialchars($place['title'])));
+              $place['description'] = htmlspecialchars_decode(addslashes(htmlspecialchars($place['description'])));
+              $place['uri'] = addslashes(htmlspecialchars($place['uri']));
+              $place['address'] = htmlspecialchars_decode(addslashes(htmlspecialchars($place['address'])));
               echo "
-                markers.push(['".$place[title]."', '".$place[type]."', '".$place[lat]."', '".$place[lng]."', '".$place[description]."', '".$place[uri]."', '".$place[address]."']); 
-                markerTitles[".$marker_id."] = '".$place[title]."';
+                markers.push(['".$place['title']."', '".$place['type']."', '".$place['lat']."', '".$place['lng']."', '".$place['description']."', '".$place['uri']."', '".$place['address']."']); 
+                markerTitles[".$marker_id."] = '".$place['title']."';
               "; 
-              $count[$place[type]]++;
+           #   $count[$place['type']]++;
               $marker_id++;
             }
           }
+          if($show_events == true) {
+            $place['type'] = "event";
+            $events = mysql_query("SELECT * FROM events WHERE start_date < ".(time()+4838400)." ORDER BY id DESC");
+            $events_total = mysql_num_rows($events);
+            while($event = mysql_fetch_assoc($events)) {
+              $event['title'] = htmlspecialchars_decode(addslashes(htmlspecialchars($event[title])));
+              $event['description'] = htmlspecialchars_decode(addslashes(htmlspecialchars($event[description])));
+              $event['uri'] = addslashes(htmlspecialchars($event[uri]));
+              $event['address'] = htmlspecialchars_decode(addslashes(htmlspecialchars($event[address])));
+              $event['start_date'] = date("D, M j @ g:ia", $event[start_date]);
+              echo "
+                markers.push(['".$event['title']."', 'event', '".$event['lat']."', '".$event['lng']."', '".$event['start_date']."', '".$event['uri']."', '".$event['address']."']); 
+                markerTitles[".$marker_id."] = '".$event['title']."';
+              "; 
+            #  $count[$place['type']]++;
+              $marker_id++;
+            }
+          }
+
         ?>
 
         // add markers
@@ -266,7 +322,7 @@ include "header.php";
 
       // toggle (hide/show) markers of a given type (on the map)
       function toggle(type) {
-        if($("#filter_"+type).attr('checked') == "checked") {
+        if($('#filter_'+type).is('.inactive')) {
           show(type); 
         } else {
           hide(type); 
@@ -280,6 +336,7 @@ include "header.php";
             gmarkers[i].setVisible(false);
           }
         }
+        $("#filter_"+type).addClass("inactive");
       }
 
       // show all markers of a given type
@@ -289,6 +346,7 @@ include "header.php";
             gmarkers[i].setVisible(true);
           }
         }
+        $("#filter_"+type).removeClass("inactive");
       }
       
       // toggle (hide/show) marker list of a given type
@@ -298,17 +356,14 @@ include "header.php";
 
 
       // hover on list item
-      function markerListMouseOver(marker_id) {
-        $("#marker"+marker_id).css("display", "inline");
-      }
+      //}
       function markerListMouseOut(marker_id) {
         $("#marker"+marker_id).css("display", "none");
       }
-
       google.maps.event.addDomListener(window, 'load', initialize);
     </script>
     
-    <? echo $head_html; ?>
+    <?php echo $head_html; ?>
   </head>
   <body>
     
@@ -320,7 +375,7 @@ include "header.php";
       js = d.createElement(s); js.id = id;
       js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=421651897866629";
       fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));</script>
+    }(document, 'script', 'facebook-jssdk'));</script> 
     
     <!-- google map -->
     <div id="map_canvas"></div>
@@ -334,21 +389,21 @@ include "header.php";
           </a>
         </div>
         <div class="blurb">
-          This map was made to connect and promote the Los Angeles tech startup community.
-          Let's put LA on the map!
+          This map was made to connect and promote the Kerala startup community.
+          
         </div>
         <div class="buttons">
           <a href="#modal_info" class="btn btn-large btn-info" data-toggle="modal">More Info</a>
           <a href="#modal_add" class="btn btn-large btn-inverse" data-toggle="modal">Add Something!</a>
         </div>
         <div class="share">
-          <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.represent.la" data-text="Let's put Los Angeles startups on the map:" data-via="representla" data-count="none">Tweet</a>
+          <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.snr9.com/keralastartups" data-text="Let's put kerala startups on the map:" data-via="COD3BOY" data-count="none">Tweet</a>
           <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-          <div class="fb-like" data-href="http://www.represent.la" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial"></div>
+          <!--<div class="fb-like" data-href="http://www.represent.la" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial"></div>-->
         </div>
         <div class="blurb">
           <!-- per our license, you may not remove this line -->
-          <?=$attribution?>
+          <?php echo $attribution;?>
         </div>
         <div class="search">
           <input type="text" name="search" id="search" placeholder="Type a company name..." data-provide="typeahead" autocomplete="off" />
@@ -362,26 +417,31 @@ include "header.php";
               Array('incubator', 'Incubators'), 
               Array('coworking', 'Coworking'), 
               Array('investor', 'Investors'),
-              Array('service', 'Consulting'),
+              Array('service', 'Consulting')
               );
+          if($show_events == true) {
+            $types[] = Array('event', 'Events'); 
+          }
           $marker_id = 0;
           foreach($types as $type) {
-            $places = mysql_query("SELECT * FROM places WHERE approved='1' AND type='$type[0]' ORDER BY title");
-            $places_total = mysql_num_rows($places);
+            if($type[0] != "event") {
+              $markers = mysql_query("SELECT * FROM places WHERE approved='1' AND type='$type[0]' ORDER BY title");
+            } else {
+              $markers = mysql_query("SELECT * FROM events WHERE start_date < ".(time()+4838400)." ORDER BY id DESC");
+            }
+            $markers_total = mysql_num_rows($markers);
             echo "
               <li class='category'>
                 <div class='category_item'>
-                  <div class='category_toggle'>
-                    <input type='checkbox' id='filter_$type[0]' checked='checked' onClick=\"toggle('$type[0]')\" />
-                  </div>
-                  <a href='#' onClick=\"toggleList('$type[0]');\" class='category_info'><img src='./images/icons/$type[0].png' alt='' />$type[1]<span class='total'> ($places_total)</span></a>
+                  <div class='category_toggle' onClick=\"toggle('$type[0]')\" id='filter_$type[0]'></div>
+                  <a href='#' onClick=\"toggleList('$type[0]');\" class='category_info'><img src='./images/icons/$type[0].png' alt='' />$type[1]<span class='total'> ($markers_total)</span></a>
                 </div>
                 <ul class='list-items list-$type[0]'>
             ";
-            while($place = mysql_fetch_assoc($places)) {
+            while($marker = mysql_fetch_assoc($markers)) {
               echo "
-                  <li class='".$place[type]."'>
-                    <a href='#' onMouseOver=\"markerListMouseOver('".$marker_id."')\" onMouseOut=\"markerListMouseOut('".$marker_id."')\" onClick=\"goToMarker('".$marker_id."');\">".$place[title]."</a>
+                  <li class='".$marker['type']."'>
+                    <a href='#' onMouseOver=\"markerListMouseOver('".$marker_id."')\" onMouseOut=\"markerListMouseOut('".$marker_id."')\" onClick=\"goToMarker('".$marker_id."');\">".$marker['title']."</a>
                   </li>
               ";
               $marker_id++;
@@ -420,38 +480,15 @@ include "header.php";
       </div>
       <div class="modal-body">
         <p>
-          We built this map to connect and promote the tech startup community
-          in our beloved Los Angeles. We've seeded the map but we need
-          your help to keep it fresh. If you don't see your company,
+          We built this map to connect and promote the tech startup community in Kerala. We've seeded the map but we need your help to keep it fresh. Let's 
+put the Kerala tech community on the map together! The map is a begining, more on the way, stay tuned! If you don't see your company,
           please <a href="#modal_add" data-toggle="modal" data-dismiss="modal">submit it here</a>.
-          Let's put LA on the map together!
+          
         </p>
         <p>
-          Questions? Feedback? Connect with us: <a href="http://www.twitter.com/representla" target="_blank">@representla</a>
+          Questions? Feedback? Connect with us: <a href="http://www.twitter.com/COD3BOY" target="_blank">@snr9.com/keralastartups</a>
         </p>
-        <p>
-          If you want to support the LA community by linking to this map from your website,
-          here are some badges you might like to use. You can also grab the <a href="./images/badges/LA-icon.ai">LA icon AI file</a>.
-        </p>
-        <ul class="badges">
-          <li>
-            <img src="./images/badges/badge1.png" alt="">
-          </li>
-          <li>
-            <img src="./images/badges/badge1_small.png" alt="">
-          </li>
-          <li>
-            <img src="./images/badges/badge2.png" alt="">
-          </li>
-          <li>
-            <img src="./images/badges/badge2_small.png" alt="">
-          </li>
-        </ul>
-        <p>
-          This map was built with <a href="https://github.com/abenzer/represent-map">RepresentMap</a> - an open source project we started
-          to help startup communities around the world create their own maps. 
-          Check out some <a target="_blank" href="http://www.represent.la/and-other-cities">startup maps</a> built by other communities!
-        </p>
+        
       </div>
       <div class="modal-footer">
         <a href="#" class="btn" data-dismiss="modal" style="float: right;">Close</a>
@@ -576,7 +613,7 @@ include "header.php";
           }
         );
       });
-    </script>
+ </script>
     
     
   </body>

@@ -1,6 +1,7 @@
 <?php
 include "../include/db.php";
-
+$task = "";
+//$page = "";
 // get task
 if(isset($_GET['task'])) { $task = $_GET['task']; } 
 else if(isset($_POST['task'])) { $task = $_POST['task']; }

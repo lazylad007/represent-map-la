@@ -57,35 +57,35 @@ echo $admin_head;
 
 <div id="admin">
   <h3>
-    <? if($total > $items_per_page) { ?>
-      <?=$page_start+1?>-<? if($page_end > $total) { echo $total; } else { echo $page_end; } ?>
-      of <?=$total?> markers
-    <? } else { ?>
-      <?=$total?> markers
-    <? } ?>
+    <?php if($total > $items_per_page) { ?>
+      <?php echo $page_start+1;?>-<? if($page_end > $total) { echo $total; } else { echo $page_end; } ?>
+      of <?php echo $total;?> markers
+    <?php } else { ?>
+      <?php echo $total;?> markers
+    <?php } ?>
   </h3>
   <ul>
-    <?
+    <?php
       while($place = mysql_fetch_assoc($places)) {
-        $place[uri] = str_replace("http://", "", $place[uri]);
-        $place[uri] = str_replace("https://", "", $place[uri]);
-        $place[uri] = str_replace("www.", "", $place[uri]);
+        $place['uri'] = str_replace("http://", "", $place['uri']);
+        $place['uri'] = str_replace("https://", "", $place['uri']);
+        $place['uri'] = str_replace("www.", "", $place['uri']);
         echo "
           <li>
             <div class='options'>
               <a class='btn btn-small' href='edit.php?place_id=$place[id]&view=$view&search=$search&p=$p'>Edit</a>
               ";
-              if($place[approved] == 1) {
+              if($place['approved'] == 1) {
                 echo "
                   <a class='btn btn-small btn-success disabled'>Approve</a>
                   <a class='btn btn-small btn-inverse' href='index.php?task=hide&place_id=$place[id]&view=$view&search=$search&p=$p'>Reject</a>
                 ";
-              } else if(is_null($place[approved])) {
+              } else if(is_null($place['approved'])) {
                 echo "
                   <a class='btn btn-small btn-success' href='index.php?task=approve&place_id=$place[id]&view=$view&search=$search&p=$p'>Approve</a>
                   <a class='btn btn-small btn-inverse' href='index.php?task=hide&place_id=$place[id]&view=$view&search=$search&p=$p'>Reject</a>
                 ";
-              } else if($place[approved] == 0) {
+              } else if($place['approved'] == 0) {
                 echo "
                   <a class='btn btn-small btn-success' href='index.php?task=approve&place_id=$place[id]&view=$view&search=$search&p=$p'>Approve</a>
                   <a class='btn btn-small btn-inverse disabled'>Reject</a>
@@ -108,22 +108,22 @@ echo $admin_head;
     ?>
   </ul>
   
-  <? if($p > 1 || $total >= $items_per_page) { ?>
+  <?php if($p > 1 || $total >= $items_per_page) { ?>
     <ul class="pager">
-      <? if($p > 1) { ?>
+      <?php if($p > 1) { ?>
         <li class="previous">
-          <a href="index.php?view=<?=$view?>&search=<?=$search?>&p=<? echo $p-1; ?>">&larr; Previous</a>
+          <a href="index.php?view=<?php echo $view;?>&search=<?php echo $search;?>&p=<?php echo $p-1; ?>">&larr; Previous</a>
         </li>
-      <? } ?>
-      <? if($total >= $items_per_page) { ?>
+      <?php } ?>
+      <?php if($total >= $items_per_page * $p) { ?>
         <li class="next">
-          <a href="index.php?view=<?=$view?>&search=<?=$search?>&p=<? echo $p+1; ?>">Next &rarr;</a>
+          <a href="index.php?view=<?php echo $view;?>&search=<?php echo $search;?>&p=<?php echo $p+1; ?>">Next &rarr;</a>
         </li>
-      <? } ?>
+      <?php } ?>
     </ul>
-  <? } ?>
+  <?php } ?>
 
 </div>
 
 
-<? echo $admin_foot ?>
+<?php echo $admin_foot ?>
