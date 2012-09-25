@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 $page = "index";
 include "header.php";
 
@@ -58,7 +58,7 @@ echo $admin_head;
 <div id="admin">
   <h3>
     <?php if($total > $items_per_page) { ?>
-      <?php echo $page_start+1;?>-<? if($page_end > $total) { echo $total; } else { echo $page_end; } ?>
+      <?php echo $page_start+1;?>-<?php if($page_end > $total) { echo $total; } else { echo $page_end; } ?>
       of <?php echo $total;?> markers
     <?php } else { ?>
       <?php echo $total;?> markers

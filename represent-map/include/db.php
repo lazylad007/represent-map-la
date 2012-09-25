@@ -10,7 +10,7 @@ $db_name = "keralastartups";
 $db_user = "keralastartups";
 
 // database password
-$db_pass = "admin";
+$db_pass = "keralastartups";
 
 // admin username
 $admin_user = "admin";

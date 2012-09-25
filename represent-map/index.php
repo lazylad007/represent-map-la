@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 include "header.php";
 
 ?>
@@ -131,7 +131,7 @@ include "header.php";
 
         // set map options
         var myOptions = {
-          zoom: 8,
+          zoom: 7,
           //minZoom: 10,
           center: new google.maps.LatLng(10.6537, 76.0728),
           mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -367,15 +367,15 @@ include "header.php";
   </head>
   <body>
     
-    <!-- facebook like button code -->
-    <div id="fb-root"></div>
-    <script>(function(d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) return;
-      js = d.createElement(s); js.id = id;
-      js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=421651897866629";
-      fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));</script> 
+    <!-- facebook subscribe button code -->
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=278428205520340";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
     
     <!-- google map -->
     <div id="map_canvas"></div>
@@ -399,7 +399,7 @@ include "header.php";
         <div class="share">
           <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.snr9.com/keralastartups" data-text="Let's put kerala startups on the map:" data-via="COD3BOY" data-count="none">Tweet</a>
           <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-          <!--<div class="fb-like" data-href="http://www.represent.la" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false" data-font="arial"></div>-->
+        <div class="fb-subscribe" data-href="https://www.facebook.com/COD3BOY" data-layout="button_count" data-show-faces="true" data-font="tahoma" data-width="100"></div>
         </div>
         <div class="blurb">
           <!-- per our license, you may not remove this line -->
@@ -486,7 +486,7 @@ put the Kerala tech community on the map together! The map is a begining, more o
           
         </p>
         <p>
-          Questions? Feedback? Connect with us: <a href="http://www.twitter.com/COD3BOY" target="_blank">@snr9.com/keralastartups</a>
+          Questions? Feedback? Connect with us: <a href="http://www.twitter.com/COD3BOY" target="_blank">@COD3BOY</a>
         </p>
         
       </div>
